@@ -15,10 +15,9 @@ def colonne(n):
     f.readline()
     while f.readline() != '':
         ligne = f.readline()
-        #fonction qui les points virgules qu'on veut 
-        
-        d
-        
-        
-    
-    
+        #fonction qui les points virgules qu'on veut
+
+        dazeradf
+
+
+
