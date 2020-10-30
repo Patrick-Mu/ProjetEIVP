@@ -1,5 +1,7 @@
 ##Projet Algo
 
+import matplotlib.pyplot as plt
+
 f = open("EIVP_KM.csv","r")
 ligne = f.readline()
 f.close()
@@ -54,9 +56,11 @@ def sent_at(id): #On veut le temps en secondes
     return liste_finale
 
 
-import matplotlib.pyplot as plt
+def affichage(n,id):
+    Y = colonne(n,id)
+    X = sent_at(id)
+    plt.plot(X,Y)
+    plt.show()
 
-Y = colonne(1,1)
-X = sent_at(1)
-plt.plot(X,Y)
-plt.show()
+##Modification pour choisir des intervalles de temps
+
