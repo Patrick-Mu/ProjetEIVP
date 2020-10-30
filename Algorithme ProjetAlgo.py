@@ -54,7 +54,6 @@ def sent_at(id): #On veut le temps en secondes
     return liste_finale
 
 
-import numpy as np
 import matplotlib.pyplot as plt
 
 Y = colonne(1,1)
