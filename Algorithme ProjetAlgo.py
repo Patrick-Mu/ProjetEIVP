@@ -64,3 +64,12 @@ def affichage(n,id):
 
 ##Modification pour choisir des intervalles de temps
 
+#Dans l'énoncé, il est écrit "Avec éventuellement la possibilité de spécifier un intervalle de temps dans la ligne de commande"
+
+def affichage(n,id,ini,fin):
+#temps INItial et temps FINal qui sont des jours (car les expériences se font à chaque fois dans le même mois)
+#Le problème c'est qu'il faudrait avoir les temps en date et non en secondes dans sent_at car ini et fin sont des dates.
+#Revoir l'algo sent_at?
+
+
+
