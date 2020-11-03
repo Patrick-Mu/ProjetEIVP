@@ -1,5 +1,14 @@
 Transférer les modifications de github à ton pc: 
-	.faire en sorte d'être dans son bureau (avec cd Onedrive, cd Desktop...)
-	.Si le dossier n'est pas encore crée sur le bureau: écrire "git clone https://github.com/Patrick-Mu/ProjetEIVP.git"
-	.Si le dossier est déjà dans le bureau, écrire "git fetch"
+	.Si le dossier n'est pas encore crée sur le bureau:
+		-faire en sorte d'être dans son bureau (avec cd Onedrive, cd Desktop...)
+		-écrire "git clone https://github.com/Patrick-Mu/ProjetEIVP.git" 
+	.Si le dossier est déjà dans le bureau: 
+		-faire en sorte d'être dans le dossier "projetEIVP" (avec cd...)
+		-écrire "git pull"
+
+Transférer les modifications du pc vers github:
+	.faire en sorte d'être dans le dossier "projetEIVP" (avec cd...)
+	.faire: "git init" puis "git add ." puis "git commit -m "Modification"" puis git push 
+
+
 
