@@ -147,3 +147,5 @@ def max(n,id,deb,fin):
     plt.plot(X,Y)
     plt.scatter(X_max,Y_max,s = 10,c= 'red')
     plt.show()
+
+def moy_arith(n,id,deb,fin):
