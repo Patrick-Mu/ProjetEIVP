@@ -149,3 +149,42 @@ def max(n,id,deb,fin):
     plt.show()
 
 def moy_arith(n,id,deb,fin):
+    X,Y = courbes(n,id,deb,fin)
+    moy = sum(Y)/len(Y)
+    Y_moy = len(Y)*[moy]
+    plt.plot(X,Y)
+    plt.plot(X,Y_moy,'r')
+    plt.show()
+
+def variance(n,id,deb,fin):
+    X,Y = courbes(n,id,deb,fin)
+    moy = sum(Y)/len(Y)
+    var = 0
+    for i in range(len(Y)):
+        var += (Y[i]-moy)**2
+    var = var/len(Y)
+    return var
+
+def ecart_type(n,id,deb,fin):
+    e_t = variance(n,id,deb,fin)**0.5
+    X,Y = courbes(n,id,deb,fin)
+    moy = sum(Y)/len(Y)
+    Y_haut = len(Y)*[moy+e_t]
+    Y_bas = len(Y)*[moy-e_t]
+    Y_moy = len(Y)*[moy]
+    plt.plot(X,Y)
+    plt.plot(X,Y_haut,'g',X,Y_bas,'g',X,Y_moy,'r')
+    plt.show()
+
+def tri(Y): #faire un tri pour trouver la médiane
+
+
+def mediane(n,id,deb,fin):
+    X,Y = courbes(n,id,deb,fin)
+    Y_tri = tri(Y)
+    med = 0
+    if len(Y)%2 == 1:
+        med = Y[len(Y)//2]
+    else:
+        med = (Y[len(Y)//2-1]+Y[len(Y)//2])/2
+    return med
