@@ -246,8 +246,8 @@ def humidex(T,H):
     return T + 0.5555*(6.11*exp(5417.7530*(1/273.16-1/(273.15+Trosee)))-10)
 
 def courbe_humidex(id,deb,fin):
-    X,temp = courbes(2,id,deb,fin)
-    X,humidity = courbes(3,id,deb,fin)
+    X,temp = courbes("temp",id,deb,fin)
+    X,humidity = courbes("humidity",id,deb,fin)
     hum = []
     for i in range(len(temp)):
         hum += [humidex(temp[i],humidity[i])]
