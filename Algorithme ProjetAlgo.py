@@ -6,28 +6,31 @@ f = open("EIVP_KM.csv","r")
 ligne = f.readline()
 f.close()
 
+# La fonction colonne permet d'extraire des données du tableau excel ligne par ligne. Elle renvoie la liste des valeurs correspondant à la colonne n (n allant de 1 pour noise à 5 pour co2) et à l'expérience choisie définie par le paramètre id qui varie de 1 à 6. Il y a donc au total 6 expériences différentes.
+
 def colonne(n,id):
-#n correspond au numéro de la colonne allant de 1 pour noise à 5 pour co2
     f = open("EIVP_KM.csv","r")
     liste = []
     ligne = f.readline()
     while ligne != '':
         ligne = f.readline()
         if ligne == '':
-            break
+            break                                                #on extrait les données ligne par ligne
         point = []
         for i in range(len(ligne)):
             if ligne[i] == ';':
                 point += [i]
-        valeur = ligne[point[n-1]+1:point[n]]
+        valeur = ligne[point[n-1]+1:point[n]]                    #on sélectionne les valeurs correspondant à la colonne choisie
         if ligne[0] == str(id) :
             liste += [float(valeur)]
-    f.close()
-    return liste
+    f.close()                                                    #on ajoute ces valeurs dans une liste vide correspondant alors
+    return liste                                                 #à une colonne du tableau Excel pour une expérience particulière
 
 
+# La fonction sent-at permet d'extraire toutes les valeurs de la dernière colonne. Elle sélectionne ensuite dans ces valeurs celles qui nous intéressent pour obtenir l'heure précise à laquelle on a relevé la donnée. Pour cela, elle créé une liste de liste avec dans chaque sous liste le jour, et l'heure précise (heure, minutes, secondes) du relevé.
 
-def sent_at_date(id): #On veut le temps en secondes
+
+def sent_at_date(id):
     f = open("EIVP_KM.csv","r")
     liste = []
     ligne = f.readline()
@@ -43,11 +46,15 @@ def sent_at_date(id): #On veut le temps en secondes
         if ligne[0] == str(id):
             liste += [valeur]
     f.close()
-    #on a la liste de toutes les valeurs de sent_at
+#on a la liste de toutes les valeurs de la dernière colonne
     liste_temps = []
     for i in range(len(liste)):
         liste_temps += [[int(liste[i][8:10]),int(liste[i][11:13]),int(liste[i][14:16]),int(liste[i][17:19])]]
     return liste_temps
+#on créé une liste de listes avec, dans chaque sous liste, le jour,l'heure, les minutes et les secondes du relevé
+
+# La fonction conv_sec permet d'obtenir une liste de temps en secondes qui correspondra à l'abscisse des courbes tracées. Pour cela, on commence par créer une liste vide liste_secondes. On convertit ensuite chaque sous liste de liste_temps définie dans la fonction précédente en une seule valeur de temps en secondes. On ajoute alors ces valeurs à la liste vide. On définit une origine des temps correspondant à la première valeur de liste_secondes et on ajoute ensuite l'ensemble des valeurs auxquelles on a retiré l'origine dans une autre liste vide appelée liste_finale.
+
 
 def conv_sec(liste_temps):
     liste_secondes = []
@@ -62,7 +69,7 @@ def conv_sec(liste_temps):
 
 ##Modification pour choisir des intervalles de temps
 
-#Dans l'énoncé, il est écrit "Avec éventuellement la possibilité de spécifier un intervalle de temps dans la ligne de commande"
+#Dans l'énoncé, il est écrit "Avec éventuellement la possibilité de spécifier un intervalle de temps dans la ligne de commande" La fonction affichage permet ainsi d'afficher les courbes avec en ordonnée les valeurs d'une colonne n du fichier Excel (noise, température,etc...) pour une expérience donnée id et en abscisse les temps correspondants. La fonction affichage permet également de spécifier un jour de début et un jour de fin grâce aux paramètres deb et fin.
 
 def affichage(n,id,deb,fin):
     min = 0
@@ -80,10 +87,7 @@ def affichage(n,id,deb,fin):
     plt.plot(X,Y)
     plt.show()
 
-
-#temps INItial et temps FINal qui sont des jours (car les expériences se font à chaque fois dans le même mois)
-#Le problème c'est qu'il faudrait avoir les temps en date et non en secondes dans sent_at car ini et fin sont des dates.
-#Revoir l'algo sent_at?
+#Problème de la fonction affichage : sa complexité en temps est beaucoup trop importante car nous manipulons dans la fonction des listes de listes. La fonction courbes ci-dessous est donc une version modifiée de la fonction affichage qui manipule des listes simples et non des listes de listes.
 
 
 def courbes(n,id,deb,fin):
@@ -91,25 +95,29 @@ def courbes(n,id,deb,fin):
     max = 0
     jours = []
     for date in sent_at_date(id):
-        jours += [date[0]]
-    for i in range(len(jours)):
+        jours += [date[0]]                       #on ajoute dans la liste vide jour l'ensemble des jours correspondant à
+    for i in range(len(jours)):                  #l'expérience choisie
         if jours[i] == deb:
             min = i
             break
     for j in range(len(jours)-1,-1,-1):
         if jours[j] == fin:
             max = j
-            break
-    Y = colonne(n,id)[min:max+1]
+            break                                #on sélectionne ensuite les indices min et max correspondant au jour de début
+    Y = colonne(n,id)[min:max+1]                 #et au jour de fin
     X = conv_sec(sent_at_date(id))[min:max+1]
     return X,Y
+
+#La complexité en temps de cette fonction est raisonnable et permet d'obtenir les résultats rapidement.
+
+#La fonction affichage2 permet enfin d'afficher les courbes.
 
 def affichage2(n,id,deb,fin):
     X,Y = courbes(n,id,deb,fin)
     plt.plot(X,Y)
     plt.show()
 
-
+#La fonction min permet de trouver le minimum et d'afficher sur la courbe la valeur du minimum et l'ensemble des abscisses pour lesquelles ce minimum est atteint.
 
 def min(n,id,deb,fin):
     X,Y = courbes(n,id,deb,fin)
@@ -129,6 +137,7 @@ def min(n,id,deb,fin):
     plt.scatter(X_min,Y_min,s = 10,c ='red')
     plt.show()
 
+#La fonction max permet de trouver le maximum et d'afficher sur la courbe la valeur du maximum et l'ensemble des abscisses pour lesquelles ce maximum est atteint.
 
 def max(n,id,deb,fin):
     X,Y = courbes(n,id,deb,fin)
