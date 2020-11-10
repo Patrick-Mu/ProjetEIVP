@@ -137,7 +137,7 @@ def min(n,id,deb,fin):
     plt.scatter(X_min,Y_min,s = 10,c ='red')
     plt.show()
 
-#La fonction max permet de trouver le maximum et d'afficher sur la courbe la valeur du maximum et l'ensemble des abscisses pour lesquelles ce maximum est atteint. h
+#La fonction max permet de trouver le maximum et d'afficher sur la courbe la valeur du maximum et l'ensemble des abscisses pour lesquelles ce maximum est atteint.
 
 def max(n,id,deb,fin):
     X,Y = courbes(n,id,deb,fin)
@@ -197,3 +197,34 @@ def mediane(n,id,deb,fin):
     else:
         med = (Y[len(Y)//2-1]+Y[len(Y)//2])/2
     return med
+
+def valeurs_stats(n,id,deb,fin): #est-ce qu'on veut aussi les valeurs chiffrés avec un print?
+    min(n,id,deb,fin)
+    max(n,id,deb,fin)
+    moy_arith(n,id,deb,fin)
+    ecart_type(n,id,deb,fin)
+    mediane(n,id,deb,fin)
+    print()
+
+##Indice humidex
+
+from math import *
+
+def humidex(T,H):
+    H = H/100 #car c'est un poucentage
+    a = 17.27
+    b = 237.7
+    Trosee = b*(a*T/(b+T)+log(H))/(a-(a*T/(b+T)+log(H)))
+    return T + 0.5555*(6.11*exp(5417.7530*(1/273.16-1/(273.15+Trosee)))-10)
+
+def courbe_humidex(id,deb,fin): #On doit l'afficher?
+    X,temp = courbes(2,id,deb,fin)
+    X,humidity = courbes(3,id,deb,fin)
+    hum = []
+    for i in range(len(temp)):
+        hum += [humidex(temp[i],humidity[i])]
+    plt.plot(X,hum)
+    plt.show()
+
+#Gros problème: la fonction courbes ne fonctionne pas avec id=5 et lorsque fin = 22 ?!?
+#Réponse: Il n'y a pas de relevé de valeurs le 22 pour l'expérience id=5
