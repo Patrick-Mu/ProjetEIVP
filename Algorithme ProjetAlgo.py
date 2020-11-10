@@ -1,15 +1,30 @@
 ##Projet Algo
 
+
 import matplotlib.pyplot as plt
 
-f = open("EIVP_KM.csv","r")
+f = open("excelbonneversion.csv","r")
 ligne = f.readline()
 f.close()
 
 # La fonction colonne permet d'extraire des données du tableau excel ligne par ligne. Elle renvoie la liste des valeurs correspondant à la colonne n (n allant de 1 pour noise à 5 pour co2) et à l'expérience choisie définie par le paramètre id qui varie de 1 à 6. Il y a donc au total 6 expériences différentes.
+def nom_colonnes(var):
+    if var=="noise":
+        return 1
+    if var=="temp":
+        return 2
+    if var=="humidity":
+        return 3
+    if var=="lum" :
+        return 4
+    if var=="co2" :
+        return 5
+    else :
+        print("mauvaise orthographe")
 
-def colonne(n,id):
-    f = open("EIVP_KM.csv","r")
+def colonne(var,id):
+    n=nom_colonnes(var)
+    f = open("excelbonneversion.csv","r")
     liste = []
     ligne = f.readline()
     while ligne != '':
@@ -20,8 +35,8 @@ def colonne(n,id):
         for i in range(len(ligne)):
             if ligne[i] == ';':
                 point += [i]
-        valeur = ligne[point[n-1]+1:point[n]]                    #on sélectionne les valeurs correspondant à la colonne choisie
-        if ligne[0] == str(id) :
+        valeur = ligne[point[n]+1:point[n+1]]                    #on sélectionne les valeurs correspondant à la colonne choisie
+        if ligne[point[0]+1:point[1]]  == str(id) :
             liste += [float(valeur)]
     f.close()                                                    #on ajoute ces valeurs dans une liste vide correspondant alors
     return liste                                                 #à une colonne du tableau Excel pour une expérience particulière
@@ -31,7 +46,7 @@ def colonne(n,id):
 
 
 def sent_at_date(id):
-    f = open("EIVP_KM.csv","r")
+    f = open("excelbonneversion.csv","r")
     liste = []
     ligne = f.readline()
     while ligne != '':
@@ -42,8 +57,8 @@ def sent_at_date(id):
         for i in range(len(ligne)):
             if ligne[i] == ';':
                 point += [i]
-        valeur = ligne[point[5]+1:]
-        if ligne[0] == str(id):
+        valeur = ligne[point[6]+1:]
+        if ligne[point[0]+1:point[1]]  == str(id) :
             liste += [valeur]
     f.close()
 #on a la liste de toutes les valeurs de la dernière colonne
@@ -71,7 +86,7 @@ def conv_sec(liste_temps):
 
 #Dans l'énoncé, il est écrit "Avec éventuellement la possibilité de spécifier un intervalle de temps dans la ligne de commande" La fonction affichage permet ainsi d'afficher les courbes avec en ordonnée les valeurs d'une colonne n du fichier Excel (noise, température,etc...) pour une expérience donnée id et en abscisse les temps correspondants. La fonction affichage permet également de spécifier un jour de début et un jour de fin grâce aux paramètres deb et fin.
 
-def affichage(n,id,deb,fin):
+def affichage(var,id,deb,fin):
     min = 0
     max = 0
     for i in range(len(sent_at_date(id))):
@@ -82,7 +97,7 @@ def affichage(n,id,deb,fin):
         if sent_at_date(id)[j][0] == fin:
             max = j
             break
-    Y = colonne(n,id)[min:max+1]
+    Y = colonne(var,id)[min:max+1]
     X = conv_sec(sent_at_date(id))[min:max+1]
     plt.plot(X,Y)
     plt.show()
@@ -90,9 +105,9 @@ def affichage(n,id,deb,fin):
 #Problème de la fonction affichage : sa complexité en temps est beaucoup trop importante car nous manipulons dans la fonction des listes de listes. La fonction courbes ci-dessous est donc une version modifiée de la fonction affichage qui manipule des listes simples et non des listes de listes.
 
 
-def courbes(n,id,deb,fin):
-    min = 0
-    max = 0
+def courbes(var,id,deb,fin):
+    min = -1
+    max = -1
     jours = []
     for date in sent_at_date(id):
         jours += [date[0]]                       #on ajoute dans la liste vide jour l'ensemble des jours correspondant à
@@ -103,8 +118,12 @@ def courbes(n,id,deb,fin):
     for j in range(len(jours)-1,-1,-1):
         if jours[j] == fin:
             max = j
-            break                                #on sélectionne ensuite les indices min et max correspondant au jour de début
-    Y = colonne(n,id)[min:max+1]                 #et au jour de fin
+            break  #on sélectionne ensuite les indices min et max correspondant au jour de début
+    if max==-1:
+        print("il n'y a pas eu de relevé pour le jour"+str(fin))
+    if min==-1:
+        print("il n'y a pas eu de relevé pour le jour"+str(deb))
+    Y = colonne(var,id)[min:max+1]                 #et au jour de fin
     X = conv_sec(sent_at_date(id))[min:max+1]
     return X,Y
 
@@ -112,15 +131,15 @@ def courbes(n,id,deb,fin):
 
 #La fonction affichage2 permet enfin d'afficher les courbes.
 
-def affichage2(n,id,deb,fin):
-    X,Y = courbes(n,id,deb,fin)
+def affichage2(var,id,deb,fin):
+    X,Y = courbes(var,id,deb,fin)
     plt.plot(X,Y)
     plt.show()
 
 #La fonction min permet de trouver le minimum et d'afficher sur la courbe la valeur du minimum et l'ensemble des abscisses pour lesquelles ce minimum est atteint.
 
-def min(n,id,deb,fin):
-    X,Y = courbes(n,id,deb,fin)
+def min(var,id,deb,fin):
+    X,Y = courbes(var,id,deb,fin)
     min =  Y[0]
     for val in Y:
         if val < min:
@@ -139,8 +158,8 @@ def min(n,id,deb,fin):
 
 #La fonction max permet de trouver le maximum et d'afficher sur la courbe la valeur du maximum et l'ensemble des abscisses pour lesquelles ce maximum est atteint.
 
-def max(n,id,deb,fin):
-    X,Y = courbes(n,id,deb,fin)
+def max(var,id,deb,fin):
+    X,Y = courbes(var,id,deb,fin)
     max =  Y[0]
     for val in Y:
         if val > max:
@@ -157,26 +176,26 @@ def max(n,id,deb,fin):
     plt.scatter(X_max,Y_max,s = 10,c= 'red')
     plt.show()
 
-def moy_arith(n,id,deb,fin):
-    X,Y = courbes(n,id,deb,fin)
+def moy_arith(var,id,deb,fin):
+    X,Y = courbes(var,id,deb,fin)
     moy = sum(Y)/len(Y)
     Y_moy = len(Y)*[moy]
     plt.plot(X,Y)
     plt.plot(X,Y_moy,'r')
     plt.show()
 
-def variance(n,id,deb,fin):
-    X,Y = courbes(n,id,deb,fin)
+def variance(var,id,deb,fin):
+    X,Y = courbes(var,id,deb,fin)
     moy = sum(Y)/len(Y)
-    var = 0
+    vari = 0
     for i in range(len(Y)):
-        var += (Y[i]-moy)**2
-    var = var/len(Y)
-    return var
+        vari += (Y[i]-moy)**2
+    vari = vari/len(Y)
+    return vari
 
-def ecart_type(n,id,deb,fin):
-    e_t = variance(n,id,deb,fin)**0.5
-    X,Y = courbes(n,id,deb,fin)
+def ecart_type(var,id,deb,fin):
+    e_t = variance(var,id,deb,fin)**0.5
+    X,Y = courbes(var,id,deb,fin)
     moy = sum(Y)/len(Y)
     Y_haut = len(Y)*[moy+e_t]
     Y_bas = len(Y)*[moy-e_t]
@@ -185,26 +204,35 @@ def ecart_type(n,id,deb,fin):
     plt.plot(X,Y_haut,'g',X,Y_bas,'g',X,Y_moy,'r')
     plt.show()
 
-def tri(Y): #faire un tri pour trouver la médiane
+#faire un tri pour trouver la médiane
+def tri(Y):
+    n = len(Y)
+    for i in range(n):
+        for j in range(0, n-i-1):
+            if Y[j] > Y[j+1] :
+                Y[j], Y[j+1] = Y[j+1], Y[j]
 
-
-def mediane(n,id,deb,fin):
-    X,Y = courbes(n,id,deb,fin)
+def mediane(var,id,deb,fin):
+    X,Y = courbes(var,id,deb,fin)
+    plt.plot(X,Y)
     Y_tri = tri(Y)
     med = 0
     if len(Y)%2 == 1:
         med = Y[len(Y)//2]
     else:
         med = (Y[len(Y)//2-1]+Y[len(Y)//2])/2
-    return med
+    Y_med=len(Y)*[med]
+    plt.plot(X,Y_med,'y')
+    plt.show()
 
-def valeurs_stats(n,id,deb,fin): #est-ce qu'on veut aussi les valeurs chiffrés avec un print?
-    min(n,id,deb,fin)
-    max(n,id,deb,fin)
-    moy_arith(n,id,deb,fin)
-    ecart_type(n,id,deb,fin)
-    mediane(n,id,deb,fin)
-    print()
+
+# def valeurs_stats(n,id,deb,fin): #est-ce qu'on veut aussi les valeurs chiffrés avec un print?
+#     min(n,id,deb,fin)
+#     max(n,id,deb,fin)
+#     moy_arith(n,id,deb,fin)
+#     ecart_type(n,id,deb,fin)
+#     mediane(n,id,deb,fin)
+
 
 ##Indice humidex
 
@@ -217,7 +245,7 @@ def humidex(T,H):
     Trosee = b*(a*T/(b+T)+log(H))/(a-(a*T/(b+T)+log(H)))
     return T + 0.5555*(6.11*exp(5417.7530*(1/273.16-1/(273.15+Trosee)))-10)
 
-def courbe_humidex(id,deb,fin): #On doit l'afficher?
+def courbe_humidex(id,deb,fin):
     X,temp = courbes(2,id,deb,fin)
     X,humidity = courbes(3,id,deb,fin)
     hum = []
@@ -226,5 +254,19 @@ def courbe_humidex(id,deb,fin): #On doit l'afficher?
     plt.plot(X,hum)
     plt.show()
 
-#Gros problème: la fonction courbes ne fonctionne pas avec id=5 et lorsque fin = 22 ?!?
-#Réponse: Il n'y a pas de relevé de valeurs le 22 pour l'expérience id=5
+def correlation(var1,var2,id,deb,fin):
+    X,Y1=courbes(var1,id,deb,fin)
+    X,Y2=courbes(var2,id,deb,fin)
+    e_t1 = variance(var1,id,deb,fin)**0.5
+    e_t2 = variance(var2,id,deb,fin)**0.5
+    cov=0
+    Y1_moy=sum(Y1)/len(Y1)
+    Y2_moy=sum(Y2)/len(Y2)
+    for i in range(len(X)):
+        cov+=(Y1[i]-Y1_moy)*(Y2[i]-Y2_moy)
+    cov=cov/len(X)
+    cor=cov/(e_t1*e_t2)
+    print(cor)
+    plt.title("indice de corrélation : "+str(cor))
+    plt.plot(X,Y1,"r",X,Y2,"g")
+    plt.show()
