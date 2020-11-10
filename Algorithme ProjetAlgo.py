@@ -137,7 +137,7 @@ def min(n,id,deb,fin):
     plt.scatter(X_min,Y_min,s = 10,c ='red')
     plt.show()
 
-#La fonction max permet de trouver le maximum et d'afficher sur la courbe la valeur du maximum et l'ensemble des abscisses pour lesquelles ce maximum est atteint.
+#La fonction max permet de trouver le maximum et d'afficher sur la courbe la valeur du maximum et l'ensemble des abscisses pour lesquelles ce maximum est atteint. h
 
 def max(n,id,deb,fin):
     X,Y = courbes(n,id,deb,fin)
