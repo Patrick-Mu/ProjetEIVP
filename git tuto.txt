@@ -8,7 +8,7 @@ Transférer les modifications de github à ton pc:
 
 Transférer les modifications du pc vers github:
 	.faire en sorte d'être dans le dossier "projetEIVP" (avec cd...)
-	.faire: "git init" puis "git add ." puis "git commit -m "Modification"" puis git push 
+	.faire: "git init" puis "git add ." puis "git commit -m "Modification"" puis "git push" 
 
 
 
