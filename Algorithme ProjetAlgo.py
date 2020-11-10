@@ -134,6 +134,8 @@ def courbes(var,id,deb,fin):
 def affichage2(var,id,deb,fin):
     X,Y = courbes(var,id,deb,fin)
     plt.plot(X,Y)
+    plt.xlabel("temps en secondes")
+    plt.ylabel(var)
     plt.show()
 
 #La fonction min permet de trouver le minimum et d'afficher sur la courbe la valeur du minimum et l'ensemble des abscisses pour lesquelles ce minimum est atteint.
@@ -153,6 +155,8 @@ def min(var,id,deb,fin):
             X_min += [X[i]]
             Y_min += [Y[i]]
     plt.plot(X,Y)
+    plt.xlabel("temps en secondes")
+    plt.ylabel(var)
     plt.scatter(X_min,Y_min,s = 10,c ='red')
     plt.show()
 
@@ -173,6 +177,8 @@ def max(var,id,deb,fin):
             X_max += [X[i]]
             Y_max += [Y[i]]
     plt.plot(X,Y)
+    plt.xlabel("temps en secondes")
+    plt.ylabel(var)
     plt.scatter(X_max,Y_max,s = 10,c= 'red')
     plt.show()
 
@@ -182,6 +188,8 @@ def moy_arith(var,id,deb,fin):
     Y_moy = len(Y)*[moy]
     plt.plot(X,Y)
     plt.plot(X,Y_moy,'r')
+    plt.xlabel("temps en secondes")
+    plt.ylabel(var)
     plt.show()
 
 def variance(var,id,deb,fin):
@@ -202,6 +210,8 @@ def ecart_type(var,id,deb,fin):
     Y_moy = len(Y)*[moy]
     plt.plot(X,Y)
     plt.plot(X,Y_haut,'g',X,Y_bas,'g',X,Y_moy,'r')
+    plt.xlabel("temps en secondes")
+    plt.ylabel(var)
     plt.show()
 
 #faire un tri pour trouver la médiane
@@ -223,6 +233,8 @@ def mediane(var,id,deb,fin):
         med = (Y[len(Y)//2-1]+Y[len(Y)//2])/2
     Y_med=len(Y)*[med]
     plt.plot(X,Y_med,'y')
+    plt.xlabel("temps en secondes")
+    plt.ylabel(var)
     plt.show()
 
 
@@ -252,6 +264,8 @@ def courbe_humidex(id,deb,fin):
     for i in range(len(temp)):
         hum += [humidex(temp[i],humidity[i])]
     plt.plot(X,hum)
+    plt.xlabel("temps en secondes")
+    plt.ylabel("indice humidex")
     plt.show()
 
 def correlation(var1,var2,id,deb,fin):
@@ -267,6 +281,12 @@ def correlation(var1,var2,id,deb,fin):
     cov=cov/len(X)
     cor=cov/(e_t1*e_t2)
     print(cor)
+    fig, ax1 = plt.subplots()
+    ax1.plot(X,Y1, 'b')
+    ax1.set_xlabel('temps (s)')
+    ax1.set_ylabel(var1, color='b')
+    ax2 = ax1.twinx()
+    ax2.plot(X, Y2, 'r')
+    ax2.set_ylabel(var2, color='r')
     plt.title("indice de corrélation : "+str(cor))
-    plt.plot(X,Y1,"r",X,Y2,"g")
     plt.show()
