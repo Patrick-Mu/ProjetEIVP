@@ -137,6 +137,7 @@ def courbes(var,id,deb,fin):
 def affichage2(var,id,deb,fin):
     X,Y = courbes(var,id,deb,fin)
     plt.plot(X,Y)
+    plt.scatter(X,Y,10,'red')
     plt.xlabel("temps en secondes")
     plt.ylabel(var)
     plt.show()
@@ -152,12 +153,10 @@ def min(var,id,deb,fin):
     for val in Y:
         if val < min:
             min = val
-    liste_min = []
     X_min = []
     Y_min = []
     for i in range(len(Y)):
         if Y[i] == min:
-            liste_min += [i]
             X_min += [X[i]]
             Y_min += [Y[i]]
     plt.plot(X,Y)
@@ -175,12 +174,10 @@ def max(var,id,deb,fin):
     for val in Y:
         if val > max:
             max = val
-    liste_max = []
     X_max = []
     Y_max = []
     for i in range(len(Y)):
         if Y[i] == max:
-            liste_max += [i]
             X_max += [X[i]]
             Y_max += [Y[i]]
     plt.plot(X,Y)
@@ -196,6 +193,7 @@ def moy_arith(var,id,deb,fin):
     X,Y = courbes(var,id,deb,fin)
     moy = sum(Y)/len(Y)
     Y_moy = len(Y)*[moy]
+    print(moy)
     plt.plot(X,Y)
     plt.plot(X,Y_moy,'r')
     plt.xlabel("temps en secondes")
@@ -215,20 +213,10 @@ def variance(var,id,deb,fin):
     return vari
 
 
-# La fonction ecart_type permet de calculer l'écart-type d'une variable pendant une expérience et d'afficher une courbe dans laquelle l'écart-type est représentée comme étant l'écart entre une droite (en vert) et la courbe constante ayant comme valeur la moyenne arithmétique de la variable (en rouge).
+# La fonction ecart_type permet de calculer l'écart-type d'une variable pendant une expérience. C'est une variable qu'on ne peut pas afficher.
 
 def ecart_type(var,id,deb,fin):
-    e_t = variance(var,id,deb,fin)**0.5
-    X,Y = courbes(var,id,deb,fin)
-    moy = sum(Y)/len(Y)
-    Y_haut = len(Y)*[moy+e_t]
-    Y_bas = len(Y)*[moy-e_t]
-    Y_moy = len(Y)*[moy]
-    plt.plot(X,Y)
-    plt.plot(X,Y_haut,'g',X,Y_bas,'g',X,Y_moy,'r')
-    plt.xlabel("temps en secondes")
-    plt.ylabel(var)
-    plt.show()
+    return variance(var,id,deb,fin)**0.5
 
 
 # La fonction tri est la fonction faisant un tri à bulles d'une liste Y.
@@ -312,4 +300,29 @@ def correlation(var1,var2,id,deb,fin):
     ax2.plot(X, Y2, 'r')
     ax2.set_ylabel(var2, color='r')
     plt.title("indice de corrélation : "+str(cor))
+    plt.show()
+
+
+## Relevé des anomalies
+
+
+# La fonction anomalies permet d'afficher les valeurs anormales de la courbe d'une expérience donnée. On considère qu'une valeur est une anomalie dès lors que la différence entre cette valeur et celles qui la suit et qui la précède est supérieure à une valeur seuil. La valeur seuil choisie correspond à l'écart-type de la variable en question.
+
+
+def anomalies(var,id,deb,fin):
+    seuil = ecart_type(var,id,deb,fin)
+    X,Y = courbes(var,id,deb,fin)
+    X_anomalie = []
+    Y_anomalie = []
+    for i in range(1,len(Y)-1):
+        diff1 = abs(Y[i]-Y[i-1])
+        diff2 = abs(Y[i]-Y[i+1])
+        if diff1 > seuil and diff2 > seuil and (Y[i]-Y[i-1])*(Y[i]-Y[i+1])>0:   # Une valeur est une anomalie uniquement si elle
+            Y_anomalie += [Y[i]]                                                # présente un pic sur la courbe, d'où la dernière
+            X_anomalie += [X[i]]                                                # condition
+    plt.plot(X,Y)
+    plt.scatter(X,Y,10,'green')
+    plt.xlabel("temps en secondes")
+    plt.ylabel(var)
+    plt.scatter(X_anomalie,Y_anomalie,s = 20,c= 'red')
     plt.show()
