@@ -203,7 +203,7 @@ def moy_arith(var,id,deb,fin):
     plt.show()
 
 
-# La fonction variance permet de calculer et de retourner la variance d'une variable pendant une expérience. C'est une variable qu'on ne peut pas afficher
+# La fonction variance permet de calculer et de retourner la variance d'une variable pendant une expérience. C'est une variable qu'on ne peut pas afficher.
 
 def variance(var,id,deb,fin):
     X,Y = courbes(var,id,deb,fin)
@@ -215,7 +215,7 @@ def variance(var,id,deb,fin):
     return vari
 
 
-# La fonction ecart_type permet de calculer l'écart-type d'une variable pendant une expérience et d'afficher une courbe dans laquelle l'écart-type est représentée comme étant l'écart entre une droite (en vert) et la droite ayant comme valeur la moyenne arithmétique de la variable (en rouge).
+# La fonction ecart_type permet de calculer l'écart-type d'une variable pendant une expérience et d'afficher une courbe dans laquelle l'écart-type est représentée comme étant l'écart entre une droite (en vert) et la courbe constante ayant comme valeur la moyenne arithmétique de la variable (en rouge).
 
 def ecart_type(var,id,deb,fin):
     e_t = variance(var,id,deb,fin)**0.5
