@@ -321,8 +321,8 @@ def anomalies(var,id,deb,fin):
             Y_anomalie += [Y[i]]                                                # présente un pic sur la courbe, d'où la dernière
             X_anomalie += [X[i]]                                                # condition
     plt.plot(X,Y)
-    plt.scatter(X,Y,10,'green')
+    plt.scatter(X,Y,10,'red')
     plt.xlabel("temps en secondes")
     plt.ylabel(var)
-    plt.scatter(X_anomalie,Y_anomalie,s = 20,c= 'red')
+    plt.scatter(X_anomalie,Y_anomalie,s = 50,c= 'orange')
     plt.show()
